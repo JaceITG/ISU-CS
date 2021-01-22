@@ -2,13 +2,39 @@ HOMEWORK 1
 Directions: Show Work
 
 1) Find the gcd of 100001 and 63637.
-
+a = 100001
+b = 63637
+./gcd.py a b
+GCD of 100001 and 63637 = 9091
 
 2) Find the gcd of 90123 and 275831.
+a = 90123
+b = 275831
+./gcd.py a b
+GCD of 90123 and 275831 = 2731
 
 3) Reduce the fraction   78459/1072273    to lowest terms.
+first: find gcd of two ints
+second: divide both by gcd
+./gcd.py 78459 1072272 returns 3
 
 4) Prove that the square root of 3 is irrational (no a fraction).
+if sqr(3) is a/b, where a and b are whole numbers
+a and b must not have any common factors
+sqr(3) = a/b
+3 = (a^2)/(b^2)
+3*b^2 = a^2
+3|a^2
+3|(a*a)
+3|a because 3 is prime
+a = 3*c where c is some int
+
+3*b^2 = a^2
+3*b^2 = (3*c)*(3*c)
+3*b^2 = 9c^2
+b^2 = 3c^2
+3|b
+3 is a common factor of a and b, which contradicts the premise. sqr(3) is irrational
 
 5) Prove that the square root of 6 is irrational (no a fraction).
 
