@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/info"/>
+	<classpathentry kind="lib" path="C:/Users/Jace/Desktop/Code/cs260/framework/info"/>
+	<classpathentry kind="lib" path="C:/Users/Jace/Desktop/Code/cs260/GridWorld/gridworld.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
