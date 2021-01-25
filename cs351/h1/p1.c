@@ -19,15 +19,15 @@ int main(int argc, char *argv[])
   }
 
   //Find set bits
-  int input = atoi(argv[1]);
-  int n = input;
-  int num_bits = 0;
-  //while n has bits
+  uint32_t input = atoi(argv[1]);
+  uint32_t n = input;
+  uint32_t num_bits = 0;
+
   while(n!=0){
     num_bits += n&1;
     n = n>>1;
   }
-  printf("%08x: %i\n",input, num_bits);
+  printf("%08X: %i\n",input, num_bits);
 
   return 0;
 }
