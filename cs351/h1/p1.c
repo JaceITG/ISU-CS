@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
   int input = atoi(argv[1]);
   int n = input;
   int num_bits = 0;
+  //while n has bits
   while(n!=0){
     num_bits += n&1;
     n = n>>1;
