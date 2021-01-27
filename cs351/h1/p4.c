@@ -18,7 +18,11 @@ int main(int argc, char *argv[])
     printf("Usage: p4 <integers>\n");
     exit(1);
   }
-  
+
+    uint32_t n = 0;
+    for(int i=1; i<argc; i++){
+        
+    }
 
 
   return 0;
