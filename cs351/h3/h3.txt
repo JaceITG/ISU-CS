@@ -1,0 +1,75 @@
+CS351 Assignment #3	10 points
+
+Attempt to convert the code snippets to assembly.  Refer to the asm.pdf handout
+for instructions and the templates for guidance:
+
+1) (3pts) Make a system call for:
+      chmod(path, mode);
+   where path is the address of a string and mode is the address of an integer.
+   chmod is system call number 90. Both path and mode are already defined for
+   you and remember that both are labels that represent an address:
+
+mov rax, 90
+mov rdi, path
+mov rsi, mode
+syscall
+
+
+
+
+2) (2pts) Convert the following to X86_64 assembly.  Reminder that "r##"
+   represent X86_64 registers:
+   r15 = 0;
+   r14 = 20;
+   r13 = r15;
+   r13 = r13 + r14;
+   r14--;
+
+mov r15, 0
+mov r14, 20
+mov r13, r15
+add r13, r14 ; r13 += r14
+dec r14
+
+
+
+
+3) (2pts) Convert the following to assembly:
+
+  if (rax > 10) {
+    rdx++;
+    rbx = rbx + rdx
+  }
+
+
+    cmp rax, 10 ; if ZF set, rax<=10
+    JLE .done
+    inc rdx
+    add rdx,rdx
+done:
+    ret
+
+
+
+
+
+4) (3pts) Convert the following to assembly, where 'putc' is a callable function
+  prints the character that is in 'al':
+
+  r15 = 0;
+  do {
+    al = r15;
+    al = al + '0';
+    putc(al);
+    r15++;
+  } while (r15 < 10);
+
+mov r15, 0
+.start:
+    mov al, r15
+    add al, '0'
+    call putc
+    inc r15
+cmp r15, 10
+jl .start
+
