@@ -8,20 +8,17 @@ SECTION .data
 
 SECTION .bss
     _num: resb 1
-    fd: resd 1
-    r: resd 1
-    i: resd 1
-    mask: resd 1
 
 SECTION .text
 
 ; print binary number stored in num as a string of spaces and #
 printbinary:
-    mov i, 7
+    mov r13, 7
     .loop:
-        mov mask, 1
-        shl mask, i
-        test _num, mask
+        mov r10, 1
+        mov cl, r13
+        shl r10, cl
+        test _num, r10
         jne .else
         mov al, '#'
         call putchar
@@ -32,8 +29,8 @@ printbinary:
         call putchar
 
         .after:
-        dec i
-        cmp i, 0
+        dec r13
+        cmp r13, 0
         jge .loop
 
 
@@ -53,9 +50,9 @@ mov rax, SYS_open
 mov rdi, [rsp+16]
 mov rsi, O_RDONLY
 syscall
-mov fd, ah
+mov r15, rax
 
-cmp fd, 0
+cmp r15, 0
 jge .loop
 mov rsi, ferror ; unable to open file
 call puts
@@ -63,14 +60,14 @@ call exit
 
 .loop:
 mov rax, SYS_read
-mov rdi, fd
+mov rdi, r15
 mov rsi, _num
 mov rdx, 1
 syscall ; read(fd, num, 1)
 
-mov r, rax
+mov r14, rax
 
-cmp r, 1
+cmp r14, 1
 jne .end ; exit loop
 call printbinary
 mov al, `\n`
@@ -79,6 +76,6 @@ jmp .loop
 
 .end:
 mov rax, SYS_close
-mov rdi, fd
+mov rdi, r15
 syscall ; close(fd)
 call exit
