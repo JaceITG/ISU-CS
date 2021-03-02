@@ -12,15 +12,15 @@ SECTION .bss
 SECTION .text
 
 twopow:
-    mov rax, r13
-    mov rbx, 1
-    cmp rax, 0
-    jle .end
+    mov rax, r13 ; move i into rax
+    mov rbx, 1 ; start at one
+    cmp rax, 0 ; check i against 0
+    jle .end ; exit if i is 0
     .loop:
         imul rbx, 2
         dec rax
         cmp rax,0
-        jge .loop
+        jg .loop
     .end:
     ret
 
@@ -30,7 +30,7 @@ printbinary:
     .loop:
         call twopow
         test [_num], rbx
-        jne .else
+        je .else
         mov al, '#'
         call putchar
         jmp .after
@@ -43,7 +43,7 @@ printbinary:
         dec r13
         cmp r13, 0
         jge .loop
-
+    ret
 
 
 global _start
