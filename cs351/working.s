@@ -28,8 +28,8 @@ twopow:
 printbinary:
     mov r13, 7
     .loop:
-        call twopow            ; calc 2**[r13], put in rbx
-        test [_num], rbx       ; _num & mask
+        call twopow
+        test [_num], rbx
         je .else
         mov al, '#'
         call putchar
@@ -61,17 +61,15 @@ mov rax, SYS_open
 mov rdi, [rsp+16]
 mov rsi, O_RDONLY
 syscall
-mov r15, rax        ; r15 = open([rsp+16], O_RDONLY)
+mov r15, rax
 
-cmp r15, 0          ; if errorcode
+cmp r15, 0
 jge .loop
 mov rsi, ferror ; unable to open file
 call puts
 call exit
 
 .loop:
-
-; read in next byte from file in r15
 mov rax, SYS_read
 mov rdi, r15
 mov rsi, _num
@@ -82,9 +80,9 @@ mov r14, rax
 
 cmp r14, 1
 jne .end ; exit loop
-call printbinary   ; print byte
+call printbinary
 mov al, `\n`
-call putchar  ; move to next line
+call putchar
 jmp .loop
 
 .end:
