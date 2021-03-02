@@ -11,14 +11,25 @@ SECTION .bss
 
 SECTION .text
 
+twopow:
+    mov rax, r13
+    mov rbx, 1
+    cmp rax, 0
+    jle .end
+    .loop:
+        imul rbx, 2
+        dec rax
+        cmp rax,0
+        jge .loop
+    .end:
+    ret
+
 ; print binary number stored in num as a string of spaces and #
 printbinary:
     mov r13, 7
     .loop:
-        mov r10, 1
-        mov cl, r13
-        shl r10, cl
-        test _num, r10
+        call twopow
+        test [_num], rbx
         jne .else
         mov al, '#'
         call putchar
