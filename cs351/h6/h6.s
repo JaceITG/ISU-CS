@@ -1,14 +1,29 @@
 %include "lib/lib.h"
 
-extern printnum, putchar, exit
+extern printnum, putchar, exit, puts
+
+SECTION .bss
+    num: equ 8
+
+SECTION .data
+    newl: db`\n`,0
 
 SECTION .text
 
 
 ; This function should print (rdx-1) * 4 number of spaces and return
 indent:
-
-
+    mov r15, rdx
+    imul r15, 4
+    .loop:
+        cmp r15, 0
+        jle .done
+        mov al, ' '
+        call putchar
+        dec r15
+        jmp .loop
+    .done:
+    ret
 
 
 
@@ -28,9 +43,33 @@ indent:
 ; }
 
 stacklevel:
+    enter 8, 0
+    mov QWORD[rbp-num], rdx
+    cmp QWORD[rbp-num], 5
+    jl .prints
+    mov rax, 1
+    jmp .done
 
+.prints:
+    mov r14, QWORD[rbp-num]
+    imul r14, 8
+    sub rsp, r14
+    call indent
+    mov rax, rbp
+    call printnum
+    mov al, '-'
+    call putchar
+    mov rax, rsp
+    call printnum
+    mov al, `\n`
+    call putchar
+    inc QWORD[rbp-num]
+    mov rdx, QWORD[rbp-num]
+    call stacklevel
 
-
+.done:
+    leave
+    ret
 
 
 ; Do not modify this function
