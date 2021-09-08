@@ -8,7 +8,7 @@ module.exports = {
         "max-len": [
             1,
             {
-                code: 100,
+                code: 500,
             },
         ],
         // 4 space indents
