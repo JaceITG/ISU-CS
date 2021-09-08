@@ -18,8 +18,21 @@ int main(int argc, char *argv[])
     printf("Usage: p4 <integers>\n");
     exit(1);
   }
-  
 
+    uint32_t n = 0;
+    for(int i=1; i<argc; i++){
+        uint32_t pos = atoi(argv[i]);
+        uint32_t bit = 1<<pos;
+        n = n|bit;
+    }
+    //print binary string
+    uint32_t mask = 1<<31;
+    while(mask){
+        printf("%d", (mask&n) != 0);
+        mask = mask>>1;
+    }
+    //print hex and dec notation
+    printf(" %08X %d\n", n, n, n);
 
   return 0;
 }

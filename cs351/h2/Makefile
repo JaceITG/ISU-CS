@@ -1,6 +1,6 @@
 CC=gcc
 
-PROGS=p1 p2 p3 p4 p5 p6
+PROGS=p1 p2 p3 p4
 
 # Linux defaults:
 CFLAGS=-ggdb -pedantic -Wall
@@ -11,10 +11,8 @@ all:	$(PROGS)
 
 p1:	p1.o
 p2:	p2.o
-p3:	p3.py
-p4:	p4.py
-p5:	p5.py
-p6:	p6.o
+p3:	p3.o
+p4:	p4.o
 	$(CC) $(LDFLAGS) -o $@ $<
 
 %.o:	%.c
