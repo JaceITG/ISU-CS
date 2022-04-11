@@ -1,7 +1,7 @@
 import numpy
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
-import os, time
+import os, sys
 
 DATASETS = os.path.join('.', 'data')
 
@@ -22,8 +22,10 @@ def rgb2gray(img):
 
     for i in range(3):
         gray[:,:,i] = Avg
-        
-    return gray
+    
+    print(f"Shape gray {numpy.shape(gray)}")
+    print(f"Shape Avg {numpy.shape(Avg)}")
+    return Avg
 
 #CONSTANTS
 WIDTH = 175
@@ -32,11 +34,13 @@ HEIGHT = 200
 NUM_SAMPLES = 2
 
 #initialize zeroed face in shape (w*h,1)
-avg = numpy.zeros((WIDTH*HEIGHT,1))
-A = []  #final set of data, half first image examples, half second image examples
+avg = numpy.zeros(WIDTH*HEIGHT)
+
+all = []  #final set of data, half first image examples, half second image examples
 
 #load faces in form ./data/{dataset}/{dataset}nn.jpg
 def load_face(dataset):
+    global all, avg
     dataset_path = os.path.join(DATASETS,dataset)
 
     for i in range(NUM_SAMPLES):
@@ -55,6 +59,22 @@ def load_face(dataset):
         plt.show(block=False)
         plt.pause(1)
         plt.close()
+
+        #Flatten grayscale image to 1D array and add to set
+        r = numpy.reshape(gray, WIDTH*HEIGHT)
+        all.append(r)
+        print(f"Shape r {numpy.shape(r)}")
+
+        avg = numpy.add(avg, r)
+        print(f"Shape avg {numpy.shape(avg)}")
+    
+    #Get the average of all images added to array and display
+    avg = numpy.true_divide(avg, NUM_SAMPLES)
+    avg = numpy.reshape(avg, (WIDTH,HEIGHT)).astype(int)
+    plt.imshow(avg)
+    plt.show()
+
+
     
 
 
