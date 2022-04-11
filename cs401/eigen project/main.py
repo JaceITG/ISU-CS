@@ -5,6 +5,26 @@ import os, time
 
 DATASETS = os.path.join('.', 'data')
 
+#Formula for calculating the grayscale component of pixels based on their rgb values
+#https://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
+def rgb2gray(img):
+    gray = numpy.zeros(img.shape)
+    R = numpy.array(img[:, :, 0])
+    G = numpy.array(img[:, :, 1])
+    B = numpy.array(img[:, :, 2])
+
+    R = (R *.299)
+    G = (G *.587)
+    B = (B *.114)
+
+    Avg = (R+G+B)
+    gray = img.copy()
+
+    for i in range(3):
+        gray[:,:,i] = Avg
+        
+    return gray
+
 #CONSTANTS
 WIDTH = 175
 HEIGHT = 200
@@ -27,12 +47,15 @@ def load_face(dataset):
             print(f"Invalid file: {path}")
             continue
         
-        #Load the image at path and display for 1 second
+        #Load the image at path into a matrix and display for 1 second
         img = mpimg.imread(path)
-        imgplot = plt.imshow(img)
+        gray = rgb2gray(img)
+
+        imgplot = plt.imshow(gray)
         plt.show(block=False)
         plt.pause(1)
         plt.close()
+    
 
 
 
