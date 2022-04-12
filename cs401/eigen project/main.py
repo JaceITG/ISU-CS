@@ -23,9 +23,7 @@ def rgb2gray(img):
     for i in range(3):
         gray[:,:,i] = Avg
     
-    print(f"Shape gray {numpy.shape(gray)}")
-    print(f"Shape Avg {numpy.shape(Avg)}")
-    return Avg
+    return gray
 
 #CONSTANTS
 WIDTH = 175
@@ -54,6 +52,7 @@ def load_face(dataset):
         #Load the image at path into a matrix and display for 1 second
         img = mpimg.imread(path)
         gray = rgb2gray(img)
+        
 
         imgplot = plt.imshow(gray)
         plt.show(block=False)
@@ -61,7 +60,7 @@ def load_face(dataset):
         plt.close()
 
         #Flatten grayscale image to 1D array and add to set
-        r = numpy.reshape(gray, WIDTH*HEIGHT)
+        r = numpy.reshape(gray[:,:,1], WIDTH*HEIGHT)
         all.append(r)
         print(f"Shape r {numpy.shape(r)}")
 
@@ -70,7 +69,7 @@ def load_face(dataset):
     
     #Get the average of all images added to array and display
     avg = numpy.true_divide(avg, NUM_SAMPLES)
-    avg = numpy.reshape(avg, (WIDTH,HEIGHT)).astype(int)
+    avg = numpy.reshape(avg, (HEIGHT,WIDTH)).astype(int)
     plt.imshow(avg)
     plt.show()
 
