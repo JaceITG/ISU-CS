@@ -54,6 +54,7 @@ def load_face(dataset):
         img = mpimg.imread(path)
 
         gray = rgb2gray(img)
+        print(f'Middle of gray {i}: {gray[MIDDLE[1]][MIDDLE[0]]}')
 
         imgplot = plt.imshow(gray)
         plt.show(block=False)
@@ -101,7 +102,7 @@ def create_cloud(*datasets):
         principal[:,j] = all[j] - avg
         princImg = numpy.repeat(principal[:,j], 3)
         princImg = numpy.reshape(princImg, (HEIGHT,WIDTH,3)).astype(int)
-        print(f'Middle of princ: {princImg[MIDDLE[1]][MIDDLE[0]]}')
+        print(f'Middle of princ {j}: {princImg[MIDDLE[1]][MIDDLE[0]]}')
         plt.imshow(princImg)
         plt.show(block=False)
         plt.pause(2)
