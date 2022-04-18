@@ -30,7 +30,7 @@ WIDTH = 175
 HEIGHT = 200
 MIDDLE = (WIDTH//2, HEIGHT//2)
 
-NUM_SAMPLES = 2
+NUM_SAMPLES = 6
 
 #initialize zeroed face in shape (w*h,1)
 avg = numpy.zeros(WIDTH*HEIGHT)
@@ -116,4 +116,4 @@ def likeness(sample, cloud):
 if __name__ == "__main__":
     print("Eigen Action Heros")
 
-    create_cloud("arnold")
+    create_cloud("jer", "sus")
