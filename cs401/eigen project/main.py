@@ -77,14 +77,15 @@ def get_average(*datasets):
         load_face(d)
     
     #Get the average of all images added to array and display
-    avg = numpy.true_divide(avg, NUM_SAMPLES)
+    print(f"Dividing by {NUM_SAMPLES*len(datasets)}")
+    avg = numpy.true_divide(avg, NUM_SAMPLES*len(datasets))
     avgPixels = numpy.repeat(avg, 3)  #repeat out the grayscale value for each pixel rgb to show image
 
     avgPixels = numpy.reshape(avgPixels, (HEIGHT,WIDTH,3)).astype(int)
     #print(f'Middle of avg: {avgPixels[MIDDLE[1]][MIDDLE[0]]}')
     plt.imshow(avgPixels)
     plt.show(block=False)
-    plt.pause(2)
+    plt.pause(1)
     plt.close()
 
 
