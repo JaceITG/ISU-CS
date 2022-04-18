@@ -30,7 +30,7 @@ WIDTH = 175
 HEIGHT = 200
 MIDDLE = (WIDTH//2, HEIGHT//2)
 
-NUM_SAMPLES = 6
+NUM_SAMPLES = 10
 
 #initialize zeroed face in shape (w*h,1)
 avg = numpy.zeros(WIDTH*HEIGHT)
@@ -54,11 +54,11 @@ def load_face(dataset):
         img = mpimg.imread(path)
 
         gray = rgb2gray(img)
-        print(f'Middle of gray {i}: {gray[MIDDLE[1]][MIDDLE[0]]}')
+        #print(f'Middle of gray {i}: {gray[MIDDLE[1]][MIDDLE[0]]}')
 
         imgplot = plt.imshow(gray)
         plt.show(block=False)
-        plt.pause(0.5)
+        plt.pause(0.2)
         plt.close()
 
         #Flatten grayscale image to 1D array and add to set
@@ -81,7 +81,7 @@ def get_average(*datasets):
     avgPixels = numpy.repeat(avg, 3)  #repeat out the grayscale value for each pixel rgb to show image
 
     avgPixels = numpy.reshape(avgPixels, (HEIGHT,WIDTH,3)).astype(int)
-    print(f'Middle of avg: {avgPixels[MIDDLE[1]][MIDDLE[0]]}')
+    #print(f'Middle of avg: {avgPixels[MIDDLE[1]][MIDDLE[0]]}')
     plt.imshow(avgPixels)
     plt.show(block=False)
     plt.pause(2)
@@ -93,8 +93,7 @@ def get_average(*datasets):
 
 
 def create_cloud(*datasets):
-    for d in datasets:
-        get_average(d)
+    get_average(*datasets)
     
     #Get "principal components" of each face by subtracting the cooresponding average value
     principal = numpy.zeros((WIDTH*HEIGHT,NUM_SAMPLES))
