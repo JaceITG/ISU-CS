@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import matplotlib.figure as fig
 import os, sys
 
+from yaml import unsafe_load
+
 DATASETS = os.path.join('.', 'data')
 
 #Formula for calculating the grayscale component of pixels based on their rgb values
@@ -94,8 +96,6 @@ def get_average(*datasets, show_images=True):
         plt.close()
 
 
-    
-
 
 
 def create_cloud(*datasets):
@@ -105,10 +105,10 @@ def create_cloud(*datasets):
     #Get "principal components" of each face by subtracting the cooresponding average value
     principal = numpy.zeros((WIDTH*HEIGHT,len(datasets)*NUM_SAMPLES))
     for j in range(len(datasets)*NUM_SAMPLES):
-        principal[:,j] = all[j] - avg   #FIXME: does this have to be able to go into negatives?
+        principal[:,j] = all[j] - avg
         princImg = numpy.repeat(principal[:,j], 3)
-        princImg = numpy.reshape(princImg, (HEIGHT,WIDTH,3)).astype(int)
-        print(f'Middle of princ {j}: {princImg[MIDDLE[1]][MIDDLE[0]]}')
+        princImg = numpy.reshape(princImg, (HEIGHT,WIDTH,3)).astype(numpy.uint8)    #FIXME: unsure if cast type affecting eigenfaces?
+        # print(f'Middle of princ {j}: {princImg[MIDDLE[1]][MIDDLE[0]]}')
         plt.imshow(princImg)
         plt.show(block=False)
         plt.pause(.3)
@@ -124,17 +124,16 @@ def create_cloud(*datasets):
 
     print(f"Shape phi {numpy.shape(phi)}")
 
-    phiImg = numpy.copy(phi)
-    phiImg = numpy.repeat(phi[:,1:len(datasets)*NUM_SAMPLES],3)
-    phiImg = numpy.reshape(phiImg,(HEIGHT*WIDTH*3,-1))
-    print(f"Shape phimg {numpy.shape(phiImg)}")
+    phiImg = numpy.reshape(phi,(HEIGHT*WIDTH,-1))   #group phi into set of H*W images
+
+    #display first 9 eigengfaces
     count = 1
-    #figure = fig.Figure().add_subplot(3,3)
     for i in range(3):
         for j in range(3):
             plt.subplot(3,3,count)
-
-            im = numpy.reshape(phiImg[:,count],(HEIGHT,WIDTH,3))
+            im = numpy.repeat(phiImg[:, count], 3)
+            im = numpy.reshape(im,(HEIGHT,WIDTH,3))
+            print(f'Middle of im {j}: {im[MIDDLE[1]][MIDDLE[0]]}')
             plt.imshow(200-((25000*im).astype(int)))
             count+=1
             
