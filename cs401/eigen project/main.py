@@ -109,10 +109,10 @@ def create_cloud(*datasets):
         princImg = numpy.repeat(principal[:,j], 3)
         princImg = numpy.reshape(princImg, (HEIGHT,WIDTH,3)).astype(numpy.uint8)    #FIXME: unsure if cast type affecting eigenfaces?
         # print(f'Middle of princ {j}: {princImg[MIDDLE[1]][MIDDLE[0]]}')
-        plt.imshow(princImg)
-        plt.show(block=False)
-        plt.pause(.3)
-        plt.close()
+        # plt.imshow(princImg)
+        # plt.show(block=False)
+        # plt.pause(.3)
+        # plt.close()
     
     #Compute SVD
     print("Performing svd")
@@ -133,12 +133,32 @@ def create_cloud(*datasets):
             plt.subplot(3,3,count)
             im = numpy.repeat(phiImg[:, count], 3)
             im = numpy.reshape(im,(HEIGHT,WIDTH,3))
-            print(f'Middle of im {j}: {im[MIDDLE[1]][MIDDLE[0]]}')
             plt.imshow(200-((25000*im).astype(int)))
             count+=1
             
     plt.show(block=False)
-    plt.pause(10)
+    plt.pause(.5)
+    plt.close()
+
+    cloud1 = numpy.zeros(numpy.shape(principal[:,:NUM_SAMPLES]))
+    for i in range(NUM_SAMPLES):
+        imvec = principal[:,i]
+        cloud1[:,i] = imvec.conj().T * phi[:,1] * phi[:,2] * phi[:,3]
+    
+    cloud2 = numpy.zeros(numpy.shape(principal[:,:NUM_SAMPLES]))
+    for i in range(NUM_SAMPLES):
+        imvec = principal[:,NUM_SAMPLES+i]
+        cloud2[:,i] = imvec.conj().T * phi[:,1] * phi[:,2] * phi[:,3]
+
+    print(cloud1[:,0])
+
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
+    ax.scatter(cloud1[1,:], cloud1[2,:], cloud1[3,:], c='r')
+    ax.scatter(cloud2[1,:], cloud2[2,:], cloud2[3,:], c='b')
+
+    plt.show(block=False)
+    plt.pause(5)
     plt.close()
 
     
