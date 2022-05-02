@@ -54,11 +54,10 @@ def load_face(dataset, show_images=True):
             print(f"Invalid file: {path}")
             continue
         
-        #Load the image at path into a matrix and display for 1 second
+        #Load the image at path into a matrix and display if chosen
         img = mpimg.imread(path)
 
         gray = rgb2gray(img)
-        #print(f'Middle of gray {i}: {gray[MIDDLE[1]][MIDDLE[0]]}')
 
         if show_images:
             imgplot = plt.imshow(gray)
@@ -69,10 +68,8 @@ def load_face(dataset, show_images=True):
         #Flatten grayscale image to 1D array and add to set
         r = numpy.reshape(gray[:,:,1], WIDTH*HEIGHT)
         all.append(r)
-        #print(f"Shape r {numpy.shape(r)}")
 
         avg = numpy.add(avg, r)
-        #print(f"Shape avg {numpy.shape(avg)}")
 
 def get_average(*datasets, show_images=True):
     global avg
@@ -89,7 +86,7 @@ def get_average(*datasets, show_images=True):
         avgPixels = numpy.repeat(avg, 3)  #repeat out the grayscale value for each pixel rgb to show image
 
         avgPixels = numpy.reshape(avgPixels, (HEIGHT,WIDTH,3)).astype(int)
-        #print(f'Middle of avg: {avgPixels[MIDDLE[1]][MIDDLE[0]]}')
+
         plt.imshow(avgPixels)
         plt.show(block=False)
         plt.pause(1)
@@ -108,21 +105,11 @@ def create_cloud(*datasets):
         principal[:,j] = all[j] - avg
         princImg = numpy.repeat(principal[:,j], 3)
         princImg = numpy.reshape(princImg, (HEIGHT,WIDTH,3)).astype(numpy.uint8)    #FIXME: unsure if cast type affecting eigenfaces?
-        # print(f'Middle of princ {j}: {princImg[MIDDLE[1]][MIDDLE[0]]}')
-        # plt.imshow(princImg)
-        # plt.show(block=False)
-        # plt.pause(.3)
-        # plt.close()
     
     #Compute SVD
-    print("Performing svd")
-    print(f"Shape princ {numpy.shape(principal)}")
     (U,S,V) = la.svd(principal, full_matrices=False)
-    print("svd done")
     phi = U[:,1:len(datasets)*NUM_SAMPLES]
     phi[:,1] = -1*phi[:,1]
-
-    print(f"Shape phi {numpy.shape(phi)}")
 
     phiImg = numpy.reshape(phi,(HEIGHT*WIDTH,-1))   #group phi into set of H*W images
 
@@ -140,33 +127,57 @@ def create_cloud(*datasets):
     plt.pause(.5)
     plt.close()
 
+    #Create clouds from dataset images
     cloud1 = numpy.zeros(numpy.shape(principal[:,:NUM_SAMPLES]))
     for i in range(NUM_SAMPLES):
         imvec = principal[:,i]
-        cloud1[:,i] = imvec.conj().T * phi[:,1] * phi[:,2] * phi[:,3]
+        cloud1[:,i] = imvec.conj().T * phi[:,1] * phi[:,2] * phi[:,3]   #Transpose imvec onto first 3 svd
     
     cloud2 = numpy.zeros(numpy.shape(principal[:,:NUM_SAMPLES]))
     for i in range(NUM_SAMPLES):
         imvec = principal[:,NUM_SAMPLES+i]
-        cloud2[:,i] = imvec.conj().T * phi[:,1] * phi[:,2] * phi[:,3]
+        cloud2[:,i] = imvec.conj().T * phi[:,1] * phi[:,2] * phi[:,3]   #Transpose imvec onto first 3 svd
 
-    print(cloud1[:,0])
-
+    #Plot transposed images onto 3d figure
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
     ax.scatter(cloud1[1,:], cloud1[2,:], cloud1[3,:], c='r')
     ax.scatter(cloud2[1,:], cloud2[2,:], cloud2[3,:], c='b')
+    plt.autoscale(enable=True, axis='both', tight=None)
 
     plt.show(block=False)
-    plt.pause(5)
+    plt.pause(1)
     plt.close()
+
+    return phi, cloud1, cloud2
 
     
 
-def likeness(sample, cloud):
-    pass
+def likeness(sample, phi, *clouds):
+    global avg
+    path = os.path.abspath(sample)
+
+    #Check validity of filepath
+    if not os.path.isfile(path):
+        print(f"Invalid file: {path}")
+        return
+    
+    #Load the image at path into a matrix and display for 1 second
+    img = mpimg.imread(path)
+
+    #grayscale loaded sample and subtract average of datasets
+    gray = rgb2gray(img)
+    u = numpy.reshape(gray, HEIGHT*WIDTH, 1) - avg
+    #transpose image data onto svd data
+    upts = u.conj().T * phi[:,1] * phi[:,2] * phi[:,3]
+
+
+
+
 
 if __name__ == "__main__":
     print("Eigen Action Heros")
 
-    create_cloud("jer", "sus")
+    phi, *clouds = create_cloud("jer", "sus")
+
+    likeness("", phi, clouds)
