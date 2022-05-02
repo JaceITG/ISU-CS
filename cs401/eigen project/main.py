@@ -2,10 +2,7 @@ import numpy
 import numpy.linalg as la
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
-import matplotlib.figure as fig
 import os, sys
-
-from yaml import unsafe_load
 
 DATASETS = os.path.join('.', 'data')
 
@@ -95,7 +92,7 @@ def get_average(*datasets, show_images=True):
 
 
 
-def create_cloud(*datasets):
+def create_cloud(*datasets, show_images=2):
     global all, avg
     get_average(*datasets, show_images=False)
     
@@ -113,19 +110,20 @@ def create_cloud(*datasets):
 
     phiImg = numpy.reshape(phi,(HEIGHT*WIDTH,-1))   #group phi into set of H*W images
 
-    #display first 9 eigengfaces
-    count = 1
-    for i in range(3):
-        for j in range(3):
-            plt.subplot(3,3,count)
-            im = numpy.repeat(phiImg[:, count], 3)
-            im = numpy.reshape(im,(HEIGHT,WIDTH,3))
-            plt.imshow(200-((25000*im).astype(int)))
-            count+=1
-            
-    plt.show(block=False)
-    plt.pause(.5)
-    plt.close()
+    if show_images:
+        #display first 9 eigengfaces
+        count = 1
+        for i in range(3):
+            for j in range(3):
+                plt.subplot(3,3,count)
+                im = numpy.repeat(phiImg[:, count], 3)
+                im = numpy.reshape(im,(HEIGHT,WIDTH,3))
+                plt.imshow(200-((25000*im).astype(int)))
+                count+=1
+                
+        plt.show(block=False)
+        plt.pause(show_images)
+        plt.close()
 
     #Create clouds from dataset images
     cloud1 = numpy.zeros(numpy.shape(principal[:,:NUM_SAMPLES]))
@@ -138,22 +136,25 @@ def create_cloud(*datasets):
         imvec = principal[:,NUM_SAMPLES+i]
         cloud2[:,i] = imvec.conj().T * phi[:,1] * phi[:,2] * phi[:,3]   #Transpose imvec onto first 3 svd
 
-    #Plot transposed images onto 3d figure
-    fig = plt.figure()
-    ax = fig.add_subplot(projection='3d')
-    ax.scatter(cloud1[1,:], cloud1[2,:], cloud1[3,:], c='r')
-    ax.scatter(cloud2[1,:], cloud2[2,:], cloud2[3,:], c='b')
-    plt.autoscale(enable=True, axis='both', tight=None)
+    if show_images:
+        #Plot transposed images onto 3d figure
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='3d')
+        ax.scatter(cloud1[1,:], cloud1[2,:], cloud1[3,:], c='r', label=datasets[0])
+        ax.scatter(cloud2[1,:], cloud2[2,:], cloud2[3,:], c='b', label=datasets[1])
+        ax.legend()
+        plt.autoscale(enable=True, axis='both', tight=None)
 
-    plt.show(block=False)
-    plt.pause(1)
-    plt.close()
+        plt.show(block=False)
+        plt.pause(show_images)
+        plt.close()
 
-    return phi, cloud1, cloud2
+    clouds = {datasets[0]:cloud1,datasets[1]:cloud2}
+    return phi, clouds
 
     
 
-def likeness(sample, phi, *clouds):
+def likeness(sample, phi, clouds, show_plot=2):
     global avg
     path = os.path.abspath(sample)
 
@@ -167,17 +168,33 @@ def likeness(sample, phi, *clouds):
 
     #grayscale loaded sample and subtract average of datasets
     gray = rgb2gray(img)
-    u = numpy.reshape(gray, HEIGHT*WIDTH, 1) - avg
+    u = numpy.reshape(gray[:,:,1], WIDTH*HEIGHT) - avg
     #transpose image data onto svd data
     upts = u.conj().T * phi[:,1] * phi[:,2] * phi[:,3]
 
+    if show_plot:
+        #Plot clouds
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='3d')
+        colors = ['r','b','g','c','m']
+        for cloudi in clouds.items():
+            cloud = cloudi[1]
+            ax.scatter(cloud[1,:], cloud[2,:], cloud[3,:], c=colors.pop(0), label=cloudi[0])
+        
+        #Plot analyzed sample
+        ax.scatter(upts[1], upts[2], upts[3], c='y', label=sample, marker='^', s=100)
 
+        ax.legend()
 
+        plt.show(block=False)
+        plt.pause(show_plot)
+        plt.close()
 
 
 if __name__ == "__main__":
     print("Eigen Action Heros")
 
-    phi, *clouds = create_cloud("jer", "sus")
+    phi, clouds = create_cloud("jer", "sus", show_images=4)
 
-    likeness("", phi, clouds)
+    likeness("test.jpg", phi, clouds, show_plot=4)
+    likeness("test5.jpg", phi, clouds, show_plot=15)
