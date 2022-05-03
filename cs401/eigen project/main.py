@@ -273,7 +273,8 @@ def run_args(args):
 
     #compare sample image to the clouds
     sim = likeness(sample, phi, clouds, show_plot=show_graphs)
-    print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sorted(sim.items(), key=lambda i: i[1], reverse=True)])}")        
+    print(f"I think this image is of {max(sim, key=sim.get)}!")
+    print(f"Similarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sorted(sim.items(), key=lambda i: i[1], reverse=True)])}")      
             
 
 if __name__ == "__main__":
@@ -286,7 +287,9 @@ if __name__ == "__main__":
     phi, clouds = create_cloud(["jerma", "arnold"], show_images=None)
 
     sim = likeness("test06.jpg", phi, clouds, show_plot=2)
-    print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sorted(sim.items(), key=lambda i: i[1], reverse=True)])}")        
-
+    print(f"I think this image is of {max(sim, key=sim.get)}!")
+    print(f"Similarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sorted(sim.items(), key=lambda i: i[1], reverse=True)])}")  
+    
     sim = likeness("test00.jpg", phi, clouds, show_plot=None)
-    print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sorted(sim.items(), key=lambda i: i[1], reverse=True)])}")        
+    print(f"I think this image is of {max(sim, key=sim.get)}!")
+    print(f"Similarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sorted(sim.items(), key=lambda i: i[1], reverse=True)])}")  
