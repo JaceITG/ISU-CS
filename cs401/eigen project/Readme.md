@@ -21,6 +21,10 @@ Run Pygenfaces on the 'jerma' and 'arnold' datasets
 > python3 main.py test00.jpg -g --data=jerma,arnold
 ```
 
+After processing all dataset images, the following Eigenfaces are created
+
+![eigenfaces](https://github.com/scheisseosu/ISU-CS/blob/main/cs401/eigen%20project/example/eigenexample.jpg)
+
 The following graph depicts the eigenspace values of each dataset's images, along with the placement of the sample image
 
 ![graph](https://github.com/scheisseosu/ISU-CS/blob/main/cs401/eigen%20project/example/example.jpg)
