@@ -28,7 +28,7 @@ def rgb2gray(img):
 
 #format dict of similarities into a print-friendly string
 def form_sim(sim):
-    return os.linesep.join([f'{i[0]}: {i[1]}' for i in sorted(sim.items(), key=lambda i: i[1], reverse=True)])
+    return os.linesep.join([f'{i[0]}: {i[1]:.04f}' for i in sorted(sim.items(), key=lambda i: i[1], reverse=True)])
 
 #CONSTANTS
 WIDTH = 175
