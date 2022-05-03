@@ -26,6 +26,10 @@ def rgb2gray(img):
     
     return gray
 
+#format dict of similarities into a print-friendly string
+def form_sim(sim):
+    return os.linesep.join([f'{i[0]}: {i[1]}' for i in sorted(sim.items(), key=lambda i: i[1], reverse=True)])
+
 #CONSTANTS
 WIDTH = 175
 HEIGHT = 200
@@ -274,7 +278,7 @@ def run_args(args):
     #compare sample image to the clouds
     sim = likeness(sample, phi, clouds, show_plot=show_graphs)
     print(f"I think this image is of {max(sim, key=sim.get)}!")
-    print(f"Similarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sorted(sim.items(), key=lambda i: i[1], reverse=True)])}")      
+    print(f"Similarities: \n{form_sim(sim)}")      
             
 
 if __name__ == "__main__":
@@ -288,8 +292,8 @@ if __name__ == "__main__":
 
     sim = likeness("test06.jpg", phi, clouds, show_plot=2)
     print(f"I think this image is of {max(sim, key=sim.get)}!")
-    print(f"Similarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sorted(sim.items(), key=lambda i: i[1], reverse=True)])}")  
+    print(f"Similarities: \n{form_sim(sim)}")  
     
     sim = likeness("test00.jpg", phi, clouds, show_plot=None)
     print(f"I think this image is of {max(sim, key=sim.get)}!")
-    print(f"Similarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sorted(sim.items(), key=lambda i: i[1], reverse=True)])}")  
+    print(f"Similarities: \n{form_sim(sim)}")  
