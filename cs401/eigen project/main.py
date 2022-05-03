@@ -33,6 +33,9 @@ MIDDLE = (WIDTH//2, HEIGHT//2)
 
 NUM_SAMPLES = 10
 
+#Show the dataset images as they are being loaded in, demonstration purposes
+SHOW_DATASET_IMGS = False
+
 #initialize zeroed face in shape (w*h,1)
 avg = numpy.zeros(WIDTH*HEIGHT)
 
@@ -93,12 +96,13 @@ def get_average(datasets, show_images=True):
 
 def create_cloud(datasets, show_images=2):
     global all, avg
-    get_average(datasets, show_images=False)
+    get_average(datasets, show_images=SHOW_DATASET_IMGS)
     
     #Get "principal components" of each face by subtracting the cooresponding average value
     principal = numpy.zeros((WIDTH*HEIGHT,len(datasets)*NUM_SAMPLES))
     for j in range(len(datasets)*NUM_SAMPLES):
         principal[:,j] = all[j] - avg
+        #fix shape and pixel values for image
         princImg = numpy.repeat(principal[:,j], 3)
         princImg = numpy.reshape(princImg, (HEIGHT,WIDTH,3)).astype(int)
     
@@ -124,7 +128,7 @@ def create_cloud(datasets, show_images=2):
         plt.pause(show_images)
         plt.close()
 
-    #Create clouds from dataset images
+    #Create clouds from dataset images after principal component analysis
     cloud1 = numpy.zeros(numpy.shape(principal[:,:NUM_SAMPLES]))
     for i in range(NUM_SAMPLES):
         imvec = principal[:,i]
@@ -186,7 +190,6 @@ def likeness(sample, phi, clouds, show_plot=2):
         #average the similarities for this cloud, resulting in float from -1 to 1
         sims[k] /= len(clouds[k][1,:])
         sims[k] = (sims[k] + 1)/2   #normalize similarity value
-        #print(f"Similarity to {k}: {sims[k]:.04f}")
 
 
     if show_plot:
@@ -265,8 +268,10 @@ def run_args(args):
     show_images = time if show_images else None
     show_graphs = time if show_graphs else None
 
+    #analyze the datasets and create point clouds
     phi, clouds = create_cloud(datasets, show_images=show_images)
 
+    #compare sample image to the clouds
     sim = likeness(sample, phi, clouds, show_plot=show_graphs)
     print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sim.items()])}")        
             
@@ -281,7 +286,7 @@ if __name__ == "__main__":
     phi, clouds = create_cloud(["jerma", "arnold"], show_images=None)
 
     sim = likeness("test06.jpg", phi, clouds, show_plot=2)
-    #print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sim.items()])}")
+    print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sim.items()])}")
 
-    # sim = likeness("test00.jpg", phi, clouds, show_plot=None)
-    # print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sim.items()])}")
+    sim = likeness("test00.jpg", phi, clouds, show_plot=None)
+    print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sim.items()])}")
