@@ -68,7 +68,7 @@ def load_face(dataset, show_images=True):
 
         avg = numpy.add(avg, r)
 
-def get_average(*datasets, show_images=True):
+def get_average(datasets, show_images=True):
     global avg
 
     #load the faces of each dataset and add to avg
@@ -76,7 +76,6 @@ def get_average(*datasets, show_images=True):
         load_face(d, show_images=show_images)
     
     #Get the average of all images added to array and display
-    print(f"Dividing by {NUM_SAMPLES*len(datasets)}")
     avg = numpy.true_divide(avg, NUM_SAMPLES*len(datasets))
 
     if show_images:
@@ -92,16 +91,16 @@ def get_average(*datasets, show_images=True):
 
 
 
-def create_cloud(*datasets, show_images=2):
+def create_cloud(datasets, show_images=2):
     global all, avg
-    get_average(*datasets, show_images=False)
+    get_average(datasets, show_images=False)
     
     #Get "principal components" of each face by subtracting the cooresponding average value
     principal = numpy.zeros((WIDTH*HEIGHT,len(datasets)*NUM_SAMPLES))
     for j in range(len(datasets)*NUM_SAMPLES):
         principal[:,j] = all[j] - avg
         princImg = numpy.repeat(principal[:,j], 3)
-        princImg = numpy.reshape(princImg, (HEIGHT,WIDTH,3)).astype(numpy.uint8)    #FIXME: unsure if cast type affecting eigenfaces?
+        princImg = numpy.reshape(princImg, (HEIGHT,WIDTH,3)).astype(int)
     
     #Compute SVD
     (U,S,V) = la.svd(principal, full_matrices=False)
@@ -111,7 +110,7 @@ def create_cloud(*datasets, show_images=2):
     phiImg = numpy.reshape(phi,(HEIGHT*WIDTH,-1))   #group phi into set of H*W images
 
     if show_images:
-        #display first 9 eigengfaces
+        #display first 9 eigenfaces
         count = 1
         for i in range(3):
             for j in range(3):
@@ -187,7 +186,7 @@ def likeness(sample, phi, clouds, show_plot=2):
         #average the similarities for this cloud, resulting in float from -1 to 1
         sims[k] /= len(clouds[k][1,:])
         sims[k] = (sims[k] + 1)/2   #normalize similarity value
-        print(f"Similarity to {k}: {sims[k]:.04f}")
+        #print(f"Similarity to {k}: {sims[k]:.04f}")
 
 
     if show_plot:
@@ -211,13 +210,78 @@ def likeness(sample, phi, clouds, show_plot=2):
     return sims
 
 
+def run_args(args):
+    if '-h' in args or '--help' in args:
+        print("Compare an input image to two training datasets to determine the similarity")
+        print("Run with no arguments for default example")
+        print("Usage:\tpython main.py sample_fp [options]*")
+
+        print("Options:")
+        print(f"\t{'-i':<10}Show eigenface images")
+        print(f"\t{'-g':<10}Show graphs for the sample in relation to dataset images")
+        print(f"\t{'--data':<10}Select which datasets to use\n\t{' ':10}Default: --data=jerma,arnold")
+        print(f"\t{'--time':<10}How long to show images/graphs\n\t{' ':10}Default: --time=3")
+    
+        sys.exit(0)
+
+    sample = args.pop(0)
+
+    #defaults
+    show_images = False
+    show_graphs = False
+    datasets = ['jerma', 'arnold']
+    time = 3
+
+    #parse
+    for arg in args:
+
+        if arg.startswith('--'):
+            keyname = arg[2:arg.index('=')]
+
+            if keyname == 'data':
+                #split passed datasets on ,
+                values = arg[arg.index('=')+1:].split(',')
+                datasets = values
+            elif keyname == 'time':
+                value = arg[arg.index('=')+1:]
+                try:
+                    time = int(value)
+                except ValueError:
+                    print("Invalid time value, using default")
+            
+            continue
+
+        if arg.startswith('-'):
+            #parse simple option
+            for o in arg[1:]:
+                if o == 'i':
+                    show_images = True
+                elif o == 'g':
+                    show_graphs = True
+            
+            continue
+
+    #convert show_ variables to None or length
+    show_images = time if show_images else None
+    show_graphs = time if show_graphs else None
+
+    phi, clouds = create_cloud(datasets, show_images=show_images)
+
+    sim = likeness(sample, phi, clouds, show_plot=show_graphs)
+    print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sim.items()])}")        
+            
+
 if __name__ == "__main__":
     print("Eigen Action Heros")
 
-    phi, clouds = create_cloud("jerma", "arnold", show_images=None)
+    if len(sys.argv) > 1:
+        run_args(sys.argv[1:])
+        sys.exit(0)
 
-    sim = likeness("test01.jpg", phi, clouds, show_plot=None)
-    print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sim.items()])}")
+    phi, clouds = create_cloud(["jerma", "arnold"], show_images=None)
 
-    sim = likeness("test00.jpg", phi, clouds, show_plot=None)
-    print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sim.items()])}")
+    sim = likeness("test06.jpg", phi, clouds, show_plot=2)
+    #print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sim.items()])}")
+
+    # sim = likeness("test00.jpg", phi, clouds, show_plot=None)
+    # print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sim.items()])}")
