@@ -157,6 +157,7 @@ def create_cloud(*datasets, show_images=2):
 def likeness(sample, phi, clouds, show_plot=2):
     global avg
     path = os.path.abspath(sample)
+    keys = clouds.keys()
 
     #Check validity of filepath
     if not os.path.isfile(path):
@@ -171,6 +172,22 @@ def likeness(sample, phi, clouds, show_plot=2):
     u = numpy.reshape(gray[:,:,1], WIDTH*HEIGHT) - avg
     #transpose image data onto svd data
     upts = u.conj().T * phi[:,1] * phi[:,2] * phi[:,3]
+
+    #print similarity of upts to each dataset
+    for k in keys:
+        sim = 0
+        #for each point in cloud
+        for i in range(len(clouds[k][1,:])):
+            current = clouds[k][1:4,i]
+
+            #cosine similarity between upts x,y,z axes and current point
+            sim += current.dot(upts[1:4]) / (numpy.linalg.norm(current) * numpy.linalg.norm(upts[1:4]))
+        
+        #average the similarities for this cloud, resulting in float from -1 to 1
+        sim /= len(clouds[k][1,:])
+        sim = (sim + 1)/2   #normalize similarity value
+        print(f"Similarity to {k}: {sim:.04f}")
+
 
     if show_plot:
         #Plot clouds
@@ -194,7 +211,7 @@ def likeness(sample, phi, clouds, show_plot=2):
 if __name__ == "__main__":
     print("Eigen Action Heros")
 
-    phi, clouds = create_cloud("jer", "sus", show_images=4)
+    phi, clouds = create_cloud("jer", "sus", show_images=None)
 
     likeness("test.jpg", phi, clouds, show_plot=4)
-    likeness("test5.jpg", phi, clouds, show_plot=15)
+    likeness("test6.jpg", phi, clouds, show_plot=15)
