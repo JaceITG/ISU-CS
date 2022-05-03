@@ -174,19 +174,20 @@ def likeness(sample, phi, clouds, show_plot=2):
     upts = u.conj().T * phi[:,1] * phi[:,2] * phi[:,3]
 
     #print similarity of upts to each dataset
+    sims = {}
     for k in keys:
-        sim = 0
+        sims[k] = 0
         #for each point in cloud
         for i in range(len(clouds[k][1,:])):
             current = clouds[k][1:4,i]
 
             #cosine similarity between upts x,y,z axes and current point
-            sim += current.dot(upts[1:4]) / (numpy.linalg.norm(current) * numpy.linalg.norm(upts[1:4]))
+            sims[k] += current.dot(upts[1:4]) / (numpy.linalg.norm(current) * numpy.linalg.norm(upts[1:4]))
         
         #average the similarities for this cloud, resulting in float from -1 to 1
-        sim /= len(clouds[k][1,:])
-        sim = (sim + 1)/2   #normalize similarity value
-        print(f"Similarity to {k}: {sim:.04f}")
+        sims[k] /= len(clouds[k][1,:])
+        sims[k] = (sims[k] + 1)/2   #normalize similarity value
+        print(f"Similarity to {k}: {sims[k]:.04f}")
 
 
     if show_plot:
@@ -206,12 +207,17 @@ def likeness(sample, phi, clouds, show_plot=2):
         plt.show(block=False)
         plt.pause(show_plot)
         plt.close()
+    
+    return sims
 
 
 if __name__ == "__main__":
     print("Eigen Action Heros")
 
-    phi, clouds = create_cloud("jer", "sus", show_images=None)
+    phi, clouds = create_cloud("jerma", "arnold", show_images=None)
 
-    likeness("test.jpg", phi, clouds, show_plot=4)
-    likeness("test6.jpg", phi, clouds, show_plot=15)
+    sim = likeness("test01.jpg", phi, clouds, show_plot=5)
+    print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: {i for i in sim.items()}")
+
+    sim = likeness("test00.jpg", phi, clouds, show_plot=15)
+    print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: {i for i in sim.items()}")
