@@ -216,8 +216,8 @@ if __name__ == "__main__":
 
     phi, clouds = create_cloud("jerma", "arnold", show_images=None)
 
-    sim = likeness("test01.jpg", phi, clouds, show_plot=5)
-    print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: {i for i in sim.items()}")
+    sim = likeness("test01.jpg", phi, clouds, show_plot=None)
+    print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sim.items()])}")
 
-    sim = likeness("test00.jpg", phi, clouds, show_plot=15)
-    print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: {i for i in sim.items()}")
+    sim = likeness("test00.jpg", phi, clouds, show_plot=None)
+    print(f"I think this image is of {max(sim, key=sim.get)}!\nSimilarities: \n{os.linesep.join([f'{i[0]}: {i[1]}' for i in sim.items()])}")
