@@ -1,0 +1,17 @@
+$ --> S
+
+S -->  XR1 | XR2 | XR3 | XY | SS | AS 
+
+S -->  XS | p | AA | int x
+
+A -->  AA | int x   (think of int x as terminal) 
+
+X --> p
+
+Y --> q
+
+R1 --> SR2
+
+R2 --> YS
+
+R3 --> SY

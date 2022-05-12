@@ -24,9 +24,13 @@ def read_csv(file_path, field_sep=",", record_sep="\n"):
 
         first = values.pop(0)
         id = int(first) if first.isdigit() else first
+
+        #if duplicate ids, add zeros until unique
+        while id in data.keys():
+            id *= 10
         
         data[id] = {header[i]:values[i] for i in range(len(values))}
-    
+
     return data
 
 def format_dollar(num):

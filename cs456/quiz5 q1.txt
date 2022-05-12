@@ -1,0 +1,21 @@
+Sigma = {0, 1}
+Gamma = {$, S}
+Q = {q, q'}
+delta =
+
+1. delta(q, 0, $) = (q, R, $A)			read first 0, push A
+2. delta(q, 0, A) = (q, R, AB)			read 0 in state A, push B
+3. delta(q, 1, $) = (q, N, $)			first symbol is 1, loop
+4. delta(q, 1, B) = (q', R, \epsilon)		first 1 encountered, switch state to q'
+5. delta(q, 1, A) = (q, N, A)			1 read after odd number of 0s, loop forever
+6. delta(q,  , $) = (q, N, \epsilon)		input empty
+7. delta(q,  , A) = (q, N, A)			input only 0s
+8. delta(q,  , B) = (q, N, B)			input only 0s
+9. delta(q', 0, $) = (q', N, $)			zero to right of one
+10. delta(q', 0, B) = (q', N, B)		zero to right of one
+11. delta(q', 1, $) = (q', N, $)		too many 1s
+12. delta(q', 1, B) = (q', N, \epsilon)		read 1, pop B and don't move head
+13. delta(q', 1, A) = (q', R, \epsilon)		read 1, pop A
+13. delta(q',  , $) = (q', N, \epsilon)		accept
+14. delta(q',  , B) = (q', N, B)		too many 0s
+

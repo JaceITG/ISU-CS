@@ -26,7 +26,7 @@ for i in monthly_sales.items():
         product_quants[sale['ProductId']] += quan
     
 
-least = min(product_quants)
-print(f"{least}, {product_quants[least]}")
+least = min(product_quants, key=product_quants.get)
+print(f"{least}, {product_quants[least]:,}")
         
 

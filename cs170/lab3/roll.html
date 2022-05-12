@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Roll a Die!</title>
+    </head>
+    <style>
+body {
+    background-color: #002b05;
+    background-image: url("https://wallpapercave.com/wp/wp6689710.jpg");
+    background-size: cover;
+    background-repeat: norepeat;
+}
+h1 {
+    color: #FFFFFF;
+    font-size: 100px;
+    text-align: center;
+}
+
+img {
+    width: 200px;
+    display: block;
+    margin: auto;
+    padding: 50px;
+
+    cursor: pointer;
+}
+
+#controls {
+    width: 150px;
+    display: block;
+    margin: auto;
+    padding: 50px;
+
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+p {
+    width: max-content;
+    display: block;
+    margin: auto;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    font-size: 20px;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+button {
+    height: 50px;
+    width: 150px;
+    font-size: 20px;
+    cursor: pointer;
+}
+    </style>
+    <body>
+        <h1>Roll a Die!</h1>
+        <div id="stage">
+            <img id="die" src="dice/5.png" onclick="clickRoll();"/>
+        </div>
+        <div id="controls">
+            <button onclick="clickRoll();">Roll the Die!</button>
+        </div>
+        <br/>
+        <br/>
+        <p>The die image may not always change to a different number when the button is pressed because Math.random() may produce the same result twice in a row.</p>
+
+        <script>
+console.log("Starting JavaScript...");
+
+function roll() {
+    return Math.floor(Math.random()*6)+1;
+}
+
+function clickRoll() {
+    //console.log("Roll was clicked!!!");  // comment out later
+    //window.alert("Roll was clicked!!!")  // comment out later
+    // We will ad more code here later.
+
+    let num = roll();
+    let imgPath = `dice/${num}.png`;
+
+    let imgEl = document.getElementById("die");  // The <img> tag has id="die"
+    imgEl.setAttribute("src", imgPath);    // change the value of "src"
+}
+        </script>
+    </body>
+</html>

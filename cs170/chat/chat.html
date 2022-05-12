@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Chat</title>
+        <style>
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+            margin: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #666666;
+            background-image: url("https://static.vecteezy.com/system/resources/previews/002/376/132/original/pink-pine-forest-with-river-landscape-background-foggy-and-mist-concept-vector.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+}
+
+#page-heading {
+            text-align: center;
+            font-family: Tahoma, sans-serif;
+            color: #fff;
+            text-shadow:
+           -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+             1px 1px 0 #000;
+}
+
+.chat-view {
+    width: 80%;
+    height: 400px;
+    margin: 0 auto;
+    background-color: rgba(255, 192, 196, 0.6);
+    border: 1px solid black;
+    border-radius: 20px 20px 0 0;
+    padding: 20px 50px 20px 50px;
+    overflow: auto;
+}
+
+.chat-controls {
+    width: 80%;
+    height: 100px;
+    margin: 0 auto;
+    background-color: rgba(255, 192, 196, 0.95);
+    border: 1px solid black;
+    border-top: none;
+    border-radius: 0 0 20px 20px;
+    padding: 10px 20px;
+}
+
+#message-box {
+    width: 85%;
+    vertical-align: top;
+}
+
+#send-btn {
+    vertical-align: top;
+}
+
+.emoji {
+    vertical-align: middle;
+}
+
+.message-left, .message-right {
+    width: fit-content;
+    display: inline;
+    padding: 10px 20px;
+    border: 1px solid blue;
+    border-radius: 3px;
+    background-color: rgba(71, 63, 190, 0.8);
+}
+
+.message-left {
+    float: left;
+}
+
+.message-right {
+    float: right;
+}
+
+        </style>
+    </head>
+    <body>
+        <h1 id="page-heading">Chat</h1>
+        <div class="chat-view">
+        </div>
+        <div class="chat-controls">
+            <textarea id="message-box" onkeypress="detectEnter();"></textarea>
+            <button id="send-btn" type="button" onclick="sendMessage();">Send</button>
+            <br/>
+            <span style="font-weight: bold;">Emojis:</span><br/>
+            <span style="border: 1px solid black;">:dog:</span>
+            <img class="emoji" src="http://place-puppy.com/15x15"/>
+            <span style="border: 1px solid black;">:cat:</span>
+            <img class="emoji" src="http://placekitten.com/15/15"/>
+        </div>
+        <script>
+console.log("Running application...");
+
+function sendMessage() {
+    const chatViewEl = document.getElementsByClassName("chat-view")[0];
+
+    const messageBoxEl = document.getElementById("message-box");
+
+    let newMessage = cleanup(messageBoxEl.value);
+    newMessage = addEmojis(newMessage);
+    newMessage = addPreprocessors(newMessage);
+    messageBoxEl.value = "";
+    messageBoxEl.focus();
+
+    //Determine whether to float next element to left or right
+    let oldHtml = chatViewEl.innerHTML
+    let newFloat = getNextFloat(oldHtml);
+
+    let numLines = getNumLines(newMessage)+1;
+    newMessage = `<div style="width:100%;height:${20*numLines}px;"><span class="${newFloat}">${newMessage}</span></div>`;
+
+    let newInner = chatViewEl.innerHTML + "<br/>" + newMessage;
+
+    chatViewEl.innerHTML = newInner;
+    chatViewEl.scrollTop = chatViewEl.scrollHeight;
+}
+
+//determine the float of the previous element and return the opposite
+function getNextFloat(html) {
+    html = html.replace(/^\s+/,''); //strip whitespaces
+
+    if (html == '') {
+        //start on left
+        return "message-left";
+    }
+
+    //get the last message (element) from the innerHTML
+    let lastTag = html.split("<span ").slice(-1)[0];
+
+    //lastTag = class="message-xxxx?"...
+    return (lastTag[15] == 'l') ? "message-right" : "message-left";
+}
+
+//return number of lines in the message
+function getNumLines(string){
+    return string.split("<br/>").length - 1;
+}
+
+function detectEnter(){
+    const ev = window.event;
+    if (ev.keyCode == 13 && !ev.shiftKey){
+        ev.preventDefault();
+        sendMessage();
+    }
+}
+
+function cleanup(message){
+    let clean = message.replaceAll("<", "&lt;");
+    clean = clean.replaceAll(">", "&gt;");
+    clean = clean.replaceAll("&", "&amp;");
+    clean = clean.replaceAll("\n", "<br/>");
+
+    return clean;
+}
+
+const emojisAsText = [
+    ":dog:",
+    ":cat:",
+];
+
+const emojisAsHtml = [
+    '<img src="http://place-puppy.com/15x15"/>',
+    '<img src="http://placekitten.com/15/15"/>',
+];
+
+
+function addEmojis(msg){
+    for(let i=0; i<emojisAsText.length; i++){
+        msg = msg.replaceAll(emojisAsText[i], emojisAsHtml[i]);
+    }
+    return msg;
+}
+
+const ppAsText = [
+    "/roll",
+];
+
+const ppAsHtml = [
+    function () {
+        const rollValue = Math.floor(Math.random() * 6) + 1;
+        return `You rolled a ${rollValue}`;
+    }
+];
+
+function addPreprocessors(msg){
+    for(let i=0; i<ppAsText.length; i++){
+        if (msg == ppAsText[i]){
+            msg = ppAsHtml[i]();
+            return msg;
+        }
+    }
+    return msg;
+}
+        </script>
+    </body>
+</html>

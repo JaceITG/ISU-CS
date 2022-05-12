@@ -26,7 +26,7 @@ for i in monthly_sales.items():
         product_quants[sale['ProductId']] += quan
     
 
-most = max(product_quants)
-print(f"{most}, {product_quants[most]}")
+most = max(product_quants, key=product_quants.get)
+print(f"{most}, {product_quants[most]:,}")
         
 

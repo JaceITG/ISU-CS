@@ -1,0 +1,45 @@
+
+1) Running time of sort algorithms.
+	refer to site
+
+2) Big O notations (e.g., log (n!) )
+
+	poly(log n) = O(n)   ~  even if log is raised to a power
+
+	roots < linear < n log n = log(n!) < n^2  < 2^n < n! < n^n
+
+3) One example of greedy algorithms (Hamiltonian path in tournaments, scheduling, e.t.c)
+	Interval scheduling: choose combination of items from schedule based on their length to optimize number of tasks
+	1) Choose the job which has the earliest finishing time from set
+	2) Remove all jobs in conflict with chosen job
+	3) Repeat until set of available jobs is empty
+
+	Minimize avg completion:
+	1) order by processing time over weight of job
+
+4) Graph algorithms (at least their names and their running times)
+	BFS: n^2 for adj matrix, m+n for link list
+	Bipartite testing: to determine if graph does not contain odd cycle, start from one red node, and color
+			it's neighbors blue. Go through BFS coloring each level alternate color. If graph does not
+			contain edge between 2 nodes of same color, is bipartite
+
+	DFS: delve and trace-back. Same O() as BFS
+	Topological Ordering: All arcs are forward, graph is acyclic
+			implement DFS using a queue. 	
+
+	Djikstra's Algo: O(m + n log n)
+	Prim's minimum spanning tree: O(m + n log n)
+	Kruskall's MST: O(m log n)
+
+4) Being able to present one Dynamic programming problem.
+	Weighted Interval Scheduling:
+		Order the intervals from 1 to j by their ending times. each interval is given a p(j)
+		which is the largest index i which does not conflict with it.
+
+		OPT(j) = max{OPT(j-1), vj + OPT(p(j))}
+
+		Optimal = maximum of either skipping the interval and moving to next, or taking the interval's
+			  value and adding to the OPT of the next largest non-conflicting interval
+
+5) NP problems.
+	Class of problems X where verifying the solution of one of the problems takes O(x^c)

@@ -32,7 +32,7 @@ for i in monthly_sales.items():
         product_revs[sale['ProductId']] += prod_price * quan * (1 + tax_rate)
     
 
-least = min(product_revs)
+least = min(product_revs, key=product_revs.get)
 print(f"{least}, {format_dollar(product_revs[least])}")
         
 

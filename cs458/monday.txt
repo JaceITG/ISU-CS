@@ -1,0 +1,6 @@
+optimal of K stations over b unsupported buildings = maximum of either { move station further left, or place building 2km to left },
+or zero if no buildings left 
+
+OPT(K, b) = {	0											K=0, b=0
+		max{ OPT(K, b-1) , OPT(K-1, index last unsupported) + Sum(station +- 2km) }		K>=1
+	    }

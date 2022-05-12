@@ -28,7 +28,7 @@ for i in monthly_sales.items():
         product_gross.setdefault(sale['ProductId'], 0)
         product_gross[sale['ProductId']] += prod_net * quan
 
-least = min(product_gross)
+least = min(product_gross, key=product_gross.get)
 print(f"{least}, {format_dollar(product_gross[least])}")
         
 

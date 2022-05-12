@@ -31,8 +31,7 @@ for i in monthly_sales.items():
         product_revs.setdefault(sale['ProductId'], 0)
         product_revs[sale['ProductId']] += prod_price * quan * (1 + tax_rate)
     
-
-most = max(product_revs)
+most = max(product_revs, key=product_revs.get)
 print(f"{most}, {format_dollar(product_revs[most])}")
         
 

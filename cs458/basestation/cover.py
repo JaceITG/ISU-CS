@@ -52,6 +52,7 @@ if __name__ == "__main__":
         if pos not in b1 and val not in v1:
             b1.append(pos)
             v1.append(val)
+    
     b2 = [3,5,6,8,12,14]
     v2 = [5,9,1,13,2,40]
 

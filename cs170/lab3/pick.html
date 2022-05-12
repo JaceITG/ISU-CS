@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Pick a Card!</title>
+    </head>
+    <style>
+body {
+    background-color: #FFFFFF;
+    background-image: url("https://images.unsplash.com/photo-1554118811-1e0d58224f24?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8Y2FmZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80");
+    background-size: cover;
+    background-repeat: norepeat;
+}
+h1 {
+    color: #FFFFFF;
+    font-size: 100px;
+    text-align: center;
+}
+
+img {
+    width: 200px;
+    display: block;
+    margin: auto;
+
+    border: 3px solid black;
+    border-radius: 10px;
+
+    background-color: #cfcfcf;
+    background-clip: content-box;
+
+    cursor: pointer;
+}
+
+#controls {
+    width: 150px;
+    display: block;
+    margin: auto;
+    padding: 50px;
+
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+p {
+    width: max-content;
+    display: block;
+    margin: auto;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    font-size: 20px;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+button {
+    height: 50px;
+    width: 150px;
+    font-size: 20px;
+    cursor: pointer;
+}
+    </style>
+    <body>
+        <h1>Pick a Card!</h1>
+        <div id="stage">
+            <img id="card" src="cards/back.png" onclick="clickPick();"/>
+        </div>
+        <br/>
+        <br/>
+        <div id="controls">
+            <button onclick="clickPick();">Pick a Card!</button>
+        </div>
+        <br/>
+        <br/>
+        <p>The button may not always change the card because the Math.random can still produce the same results, however it is less frequent here because there are more possibilities.</p>
+
+        <script>
+console.log("Starting JavaScript...");
+
+function pick() {
+    //Manipulate probability of a joker
+    if(Math.floor(Math.random()*54) > 51){
+        //pick a joker
+        return (Math.random()>.5) ? "black_joker" : "red_joker";
+    }
+
+    //pick normal card
+    let suits = ["clubs", "diamonds", "hearts", "spades"];
+    let values = ["2", "3", "4", "5", "6", "7","8"];
+    values = values.concat(["9", "10", "ace", "jack", "king", "queen"]);
+
+    let suit = suits[Math.floor(Math.random() * suits.length)];
+    let value = values[Math.floor(Math.random() * values.length)];
+
+    return `${value}_of_${suit}`;
+}
+
+function clickPick() {
+
+    let card = pick();
+    let imgPath = `cards/${card}.png`;
+    console.log(imgPath);
+
+    let imgEl = document.getElementById("card");  // The <img> tag has id="die"
+    imgEl.setAttribute("src", imgPath);    // change the value of "src"
+}
+        </script>
+    </body>
+</html>
