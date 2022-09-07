@@ -62,35 +62,31 @@ def split(tree, index):
 
 def merge(tree, index):
     size = tree[index]['size']
+    buddy = tree[index]['address'] ^ size
 
-    #check left
-    if index-1 >= 0 and tree[index-1]['pid'] == EMPTY and size == tree[index-1]['size']:
-        newtree = tree[:index-1]
+    #get index of same-sized buddy in list
+    buddy_index = -1
+    for ind, item in enumerate(tree):
+        if item['address'] == buddy and item['pid'] == EMPTY and item['size'] == size:
+            buddy_index = ind
+            break
+    
+    #if buddy found
+    if buddy_index>=0:
+        #make a new tree combining the buddies
+        start_ind = min(index, buddy_index)
+        newtree = tree[:start_ind]
 
-        #add new block of double the size
-        newtree += [{'pid': EMPTY, 'address': tree[index-1]['address'], 'size': size*2}]
+        newtree += [{'pid': EMPTY, 'address': tree[start_ind]['address'], 'size': size*2}]   #block combining two buddies
 
-        newtree += tree[index+1:]
-
-        #recursively merge newly formed tree on merged block's index
-        newtree = merge(newtree, index-1)
+        newtree += tree[max(index,buddy_index)+1:]
+        
+        #recursively check if merged block can be merged again
+        newtree = merge(newtree, start_ind)
         return newtree
-    #check right
-    elif index+1 < len(tree) and tree[index+1]['pid'] == EMPTY and size == tree[index+1]['size']:
-        newtree = tree[:index]
-
-        #add new block of double the size
-        newtree += [{'pid': EMPTY, 'address': tree[index]['address'], 'size': size*2}]
-
-        newtree += tree[index+2:]
-
-        #recursively merge newly formed tree on merged block's index
-        newtree = merge(newtree, index)
-        return newtree
-    #no merge
     else:
+        #no buddy to be merged, return tree
         return tree
-
 
 
 def allocate(tree, pid, size, minblock):
