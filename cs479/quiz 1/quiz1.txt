@@ -1,0 +1,61 @@
+1.  a) false
+    b) true
+    c) false
+    d) false
+    e) true
+
+2.  describe("multiply tests", () => {
+        test("successful", () => {
+            expect(multiply(5, 3)).toBe(15);
+        });
+        test.failing("failing", () => {
+            expect(multiply(0, 1)).toBe(1);
+        });
+    });
+
+3.  a) git checkout -b branch2
+    b) git add readme.txt
+    c) git commit -m "updating readme.txt"
+
+4.  
+
+//Box on an XY plane originated at top left
+class Box {
+
+    constructor(x, y, width, height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+
+    private contains(x, y) {
+        return (x >= this.x && x <= this.x + this.width) && (y >= this.y && y <= this.y + this.height);
+    }
+
+    isOverlapping(box2) {
+        //if box contains any corner of box2, is overlapping
+        if(this.contains(box2.x, box2.y)) return true;
+        if(this.contains(box2.x+box2.width, box2.y)) return true;
+        if(this.contains(box2.x, box2.y+box2.height)) return true;
+        if(this.contains(box2.x+box2.width, box2.y+box2.height)) return true;
+
+        //not overlapping
+        return false;
+    }
+
+    static parse(str) {
+        let args = str.split(' ');
+
+        let coords = args[0].substr(1,args[0].length-1).split(',').map(Number);
+
+        let dimensions = args[1].substr(1,args[0].length-1).split(',').map(Number);
+
+        return new Box(coords[0], coords[1], dimensions[0], dimensions[1]);
+    }
+}
+
+
+5.  a) 15
+    b) undefined
+    c) 1

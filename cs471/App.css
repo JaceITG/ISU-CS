@@ -1,0 +1,47 @@
+.body {
+	background: url("https://cdn.discordapp.com/attachments/763965461117272094/1016924538421915798/download.png");
+}
+
+.center {
+	font-family: "Comic Sans MS";
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 50%;
+}
+
+.schizo {
+	animation: schiz 2s linear infinite, grad 5s linear infinite;
+
+	text-align: center;
+	background: linear-gradient(to right,	rgba(255, 0, 0, 1) 0%,
+	rgba(255, 255, 0, 1) 33%,
+	rgba(0, 192, 255, 1) 66%,
+	rgba(192, 0, 255, 1) 100%);
+	background-size: 200% auto;
+
+	color: #000;
+	background-clip: text;
+	text-fill-color: transparent;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+
+}
+
+@keyframes grad {
+	to{
+		background-position: 200% center;
+	}
+}
+
+@keyframes schiz {
+	
+	0% {
+		opacity: 1;
+		transform: rotateX(90def);
+	}
+	100% {
+		opacity: 1;
+		transform: rotateX(720deg);
+	}
+}
